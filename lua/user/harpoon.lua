@@ -1,5 +1,6 @@
 local M = {
   "ThePrimeagen/harpoon",
+  branch = "harpoon2",
   event = "VeryLazy",
   dependencies = {
     { "nvim-lua/plenary.nvim" },
@@ -7,16 +8,37 @@ local M = {
 }
 
 function M.config()
+  local harpoon = require("harpoon")
+  harpoon:setup({settings = {save_on_toggle = true}})
+
   local keymap = vim.keymap.set
   local opts = { noremap = true, silent = true }
 
-  keymap("n", "<s-m>", "<cmd>lua require('user.harpoon').mark_file()<cr>", opts)
-  keymap("n", "<TAB>", "<cmd>lua require('harpoon.ui').toggle_quick_menu()<cr>", opts)
-end
+-- Append to & show list
+  keymap("n", "<s-m>", function() harpoon:list():append() end, opts)
+  -- keymap("n", "<leader>a", "<cmd>lua require('user.harpoon').mark_file()<cr>", opts)
+  keymap("n", "<TAB>", function() harpoon.ui:toggle_quick_menu(harpoon:list()) end, opts)
 
-function M.mark_file()
-  require("harpoon.mark").add_file()
-  vim.notify "󱡅  marked file"
+-- Quick select from list
+  keymap("n", "<leader>q", function() harpoon:list():select(1) end, opts)
+  keymap("n", "<leader>w", function() harpoon:list():select(2) end, opts)
+  keymap("n", "<leader>e", function() harpoon:list():select(3) end, opts)
+  keymap("n", "<leader>r", function() harpoon:list():select(4) end, opts)
+
+-- Toggle previous & next buffers stored within Harpoon list
+  keymap("n", "<C-f>", function() harpoon:list():prev() end, opts)
+
+   harpoon:extend({
+    UI_CREATE = function(cx)
+      vim.keymap.set("n", "<C-v>", function()
+        harpoon.ui:select_menu_item({ vsplit = true })
+      end, { buffer = cx.bufnr })
+
+      vim.keymap.set("n", "<C-x>", function()
+        harpoon.ui:select_menu_item({ split = true })
+      end, { buffer = cx.bufnr })
+    end,
+  }) keymap("n", "<C-d>", function() harpoon:list():next() end, opts)
 end
 
 return M
