@@ -66,10 +66,10 @@ function M.config()
   local icons = require "user.icons"
 
   local servers = {
+    "gopls",
     "lua_ls",
     "cssls",
     "html",
-    "tsserver",
     "eslint",
     "tsserver",
     "pyright",
