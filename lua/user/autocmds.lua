@@ -1,9 +1,4 @@
-vim.api.nvim_create_autocmd({ "BufWinEnter" }, {
-  callback = function()
-    vim.cmd "set formatoptions-=cro"
-  end,
-})
-
+-- Easy close utility files
 vim.api.nvim_create_autocmd({ "FileType" }, {
   pattern = {
     "netrw",
@@ -28,18 +23,21 @@ vim.api.nvim_create_autocmd({ "FileType" }, {
   end,
 })
 
+-- Don't use command history
 vim.api.nvim_create_autocmd({ "CmdWinEnter" }, {
   callback = function()
     vim.cmd "quit"
   end,
 })
 
+-- Resizer
 vim.api.nvim_create_autocmd({ "VimResized" }, {
   callback = function()
     vim.cmd "tabdo wincmd ="
   end,
 })
 
+-- Reload in case edited
 vim.api.nvim_create_autocmd({ "BufWinEnter" }, {
   pattern = { "*" },
   callback = function()
@@ -47,12 +45,14 @@ vim.api.nvim_create_autocmd({ "BufWinEnter" }, {
   end,
 })
 
+-- Visualize yanked text
 vim.api.nvim_create_autocmd({ "TextYankPost" }, {
   callback = function()
     vim.highlight.on_yank { higroup = "Visual", timeout = 40 }
   end,
 })
 
+-- Wrap & spellcheck for commit messages, markdown
 vim.api.nvim_create_autocmd({ "FileType" }, {
   pattern = { "gitcommit", "markdown", "NeogitCommitMessage" },
   callback = function()
@@ -61,6 +61,7 @@ vim.api.nvim_create_autocmd({ "FileType" }, {
   end,
 })
 
+-- Snippet cleanup?
 vim.api.nvim_create_autocmd({ "CursorHold" }, {
   callback = function()
     local status_ok, luasnip = pcall(require, "luasnip")
@@ -68,9 +69,15 @@ vim.api.nvim_create_autocmd({ "CursorHold" }, {
       return
     end
     if luasnip.expand_or_jumpable() then
-      -- ask maintainer for option to make this silent
-      -- luasnip.unlink_current()
       vim.cmd [[silent! lua require("luasnip").unlink_current()]]
     end
+  end,
+})
+
+-- Auto format pre-save
+vim.api.nvim_create_autocmd("BufWritePre", {
+  pattern = "*",
+  callback = function()
+    vim.lsp.buf.format({ timeout_ms = 1000 })
   end,
 })

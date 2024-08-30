@@ -5,6 +5,11 @@ local M = {
   },
 }
 
+local diff = {
+  "diff",
+  symbols = { added = " ", modified = " ", removed = " "}
+}
+
 function M.config()
   require("lualine").setup {
     options = {
@@ -13,12 +18,12 @@ function M.config()
       ignore_focus = { "NvimTree" },
     },
     sections = {
-      lualine_a = {},
+      lualine_a = { "mode" },
       lualine_b = { "branch" },
-      lualine_c = { "diagnostics" },
-      lualine_x = { "copilot", "filetype" },
-      lualine_y = { "progress" },
-      lualine_z = {},
+      lualine_c = { "filename" },
+      lualine_x = { diff ,"diagnostics"},
+      lualine_y = { "location" },
+      lualine_z = { "progress"},
     },
     extensions = { "quickfix", "man", "fugitive" },
   }

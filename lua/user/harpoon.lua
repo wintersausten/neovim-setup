@@ -15,8 +15,7 @@ function M.config()
   local opts = { noremap = true, silent = true }
 
 -- Append to & show list
-  keymap("n", "<s-m>", function() harpoon:list():append() end, opts)
-  -- keymap("n", "<leader>a", "<cmd>lua require('user.harpoon').mark_file()<cr>", opts)
+  keymap("n", "<leader>m", function() harpoon:list():append() end, opts)
   keymap("n", "<TAB>", function() harpoon.ui:toggle_quick_menu(harpoon:list()) end, opts)
 
 -- Quick select from list
@@ -27,8 +26,9 @@ function M.config()
 
 -- Toggle previous & next buffers stored within Harpoon list
   keymap("n", "<C-f>", function() harpoon:list():prev() end, opts)
+  keymap("n", "<C-d>", function() harpoon:list():next() end, opts)
 
-   harpoon:extend({
+  harpoon:extend({
     UI_CREATE = function(cx)
       vim.keymap.set("n", "<C-v>", function()
         harpoon.ui:select_menu_item({ vsplit = true })
@@ -38,7 +38,7 @@ function M.config()
         harpoon.ui:select_menu_item({ split = true })
       end, { buffer = cx.bufnr })
     end,
-  }) keymap("n", "<C-d>", function() harpoon:list():next() end, opts)
+  })
 end
 
 return M
