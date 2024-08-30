@@ -13,10 +13,7 @@ function M.config()
   null_ls.setup {
     debug = false,
     sources = {
-      formatting.stylua,
       formatting.prettier,
-      formatting.black,
-      null_ls.builtins.diagnostics.flake8,
       null_ls.builtins.completion.spell,
     },
   }
